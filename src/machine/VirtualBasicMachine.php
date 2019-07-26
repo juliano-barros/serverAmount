@@ -2,6 +2,10 @@
 
 namespace ServerAmount\Machine;
 
-Class VirtualMachine implements ServerBasicMachine{
+/**
+ * This class is the basic virtual machine which has only hdd, ram and cpu to be evaluated, as well 
+ * as basic server machine
+ */
+Class VirtualBasicMachine extends ServerBasicMachine{
 
 }

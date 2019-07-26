@@ -4,48 +4,63 @@ namespace ServerAmount\Machine;
 
 abstract Class ServerManagerAbstract{
 
-	private int $numberOfServers;
+	private $numberOfServers;
 
-	protected MachineInterface $baseMachine
+	protected $baseMachine;
 
-    abstract protected function isNeededNewServer();
+	// Method needed to check if we need a new server
+    abstract protected function isNeededNewServer() : bool;
 
-    abstract protected function addResource();
+    // Adds a base resource based on base machine
+    abstract protected function addBaseResource() : void;
 
-    abstract protected function decreaseResource(MachineInterface $machine);
+    // Decreases the current resource from a virtual machine that has been added
+    abstract protected function decreaseResource(MachineInterface $machine) : void;
 
-    abstract protected function getOverMachine();
+    // Method which will return the machine base on negative properties
+    abstract protected function getOverMachine() : MachineInterface;
 
-    abstract protected function resetOverMachine()
+    // Sets initial value to a machine, so we could add a new virtual machine again
+    abstract protected function resetOverMachine() : void;
 
-    public function setBaseMachine(MachineInterface $baseMachine){
-    	$this->baseMachine  $baseMachine
+    // Sets the base machine
+    public function setBaseMachine(MachineInterface $baseMachine) : void{
+    	$this->baseMachine = $baseMachine;
     }
 
+    // Increases the number of servers
     private function addServer(){
     	$this->numberOfServers++;
     }
 
-	public function addVirtualMachine(MachineInterface $machine){
+    // Adds a new virtual machine to the current server
+	public function addVirtualMachine(MachineInterface $machine) : void{
 		
 		$this->decreaseResource($machine);
 
-		if (!$this->isNeededNewServer()){
+		if ($this->isNeededNewServer()){
 
 			$this->addServer();
 
+			// Gets a over machine to recursively call this method
 			$machine = $this->getOverMachine();
-			
+
 			$this->resetOverMachine();
-			$this->addResource();
+			$this->addBaseResource();
 			$this->addVirtualMachine($machine);
 
 		}
 		
 	}
 
-	public function getNumberOfServers(){
+	// Returns the number of servers
+	public function getNumberOfServers() : int{
 		return $this->numberOfServers;
+	}
+
+	// Sets the number of servers
+	public function setNumberOfServers(int $numberOfServers) : void{
+		$this->numberOfServers = $numberOfServers;
 	}
 
 }
