@@ -1,6 +1,13 @@
 <?php
 
-namespace ServerAmount\Machine;
+namespace ServerAmount\Server;
+
+use ServerAmount\Machine\BasicMachineTrait;
+use ServerAmount\Machine\VirtualMachine;
+use ServerAmount\Machine\ServerMachine;
+use ServerAmount\Machine\BasicMachineAbstract;
+use ServerAmount\Exceptions\InvalidResourceException;
+use ServerAmount\Exceptions\InvalidVirtualMachineException;
 
 /**
  * This class is used as base for any kind of server, each server should implement their own 
@@ -15,6 +22,10 @@ Class ServerManager{
 
     /** @var ServerMachine $baseMachine */
 	protected $baseMachine;
+
+    public function __construct(ServerMachine $serverBase){
+        $this->setBaseMachine($serverBase);
+    }
 
     // If any cpu, hdd or ram is running below 0 we need a new server
     protected function isNeededNewServer(VirtualMachine $machine) : bool {
@@ -32,9 +43,21 @@ Class ServerManager{
         $this->setHdd($this->getHdd() - $machine->getHdd());
     }
 
+    // Checks if the machine has an empty resource
+    private function hasEmptyResource(BasicMachineAbstract $machine) : bool{
+        
+        return ( ($machine->getCpu() <= 0) ||
+                 ($machine->getHdd() <= 0) ||
+                 ($machine->getRam() <= 0) );
+
+    }
 
     // Sets the base machine
     public function setBaseMachine(ServerMachine $baseMachine) : void{
+
+        if ( $this->hasEmptyResource($baseMachine) ){
+            throw new InvalidResourceException();
+        }
 
         $this->setResource( $baseMachine->getCpu(), $baseMachine->getRam(), $baseMachine->getHdd());
 
@@ -47,9 +70,22 @@ Class ServerManager{
         $this->setBaseMachine($this->baseMachine);
     }
 
+    // Virtual machines can't be bigger than the base server nor has any property equal 0
+    private function isInvalidVirtualMachine(VirtualMachine $machine) : bool{
+        return ( 
+            ( $machine->getCpu() > $this->baseMachine->getCpu()) ||
+            ( $machine->getHdd() > $this->baseMachine->getHdd()) ||
+            ( $machine->getRam() > $this->baseMachine->getRam()) ||
+            ( $this->hasEmptyResource($machine) ));
+    }
+
     // Adds a new virtual machine to the current server
 	public function addVirtualMachine(VirtualMachine $machine) : void{
 		
+        if ( $this->isInvalidVirtualMachine($machine)){
+            throw new InvalidVirtualMachineException();
+        }
+
 		if( $this->isNeededNewServer($machine)){
             $this->addServer();
         }
