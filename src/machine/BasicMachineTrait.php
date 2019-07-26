@@ -7,8 +7,19 @@ namespace ServerAmount\Machine;
  */
 trait BasicMachineTrait{
 
+	/** 
+	 * @var int $cpu 
+	 */
 	private $cpu;
+
+	/** 
+	 * @var int $hdd 
+	 */
 	private $hdd;
+
+	/** 
+	 * @var int $ram 
+	 */
 	private $ram;
 
 	public function getCpu() : int{
@@ -18,6 +29,7 @@ trait BasicMachineTrait{
 	public function setCpu(int $cpu) : void{
 		$this->cpu = $cpu;
 	}
+
 	public function getHdd() : int{
 		return $this->hdd;
 	}
@@ -25,6 +37,7 @@ trait BasicMachineTrait{
 	public function setHdd(int $hdd) : void{
 		$this->hdd = $hdd;
 	}
+
 	public function getRam() : int{
 		return $this->ram;
 	}
