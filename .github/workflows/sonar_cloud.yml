@@ -15,8 +15,11 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Composer install
         uses: php-actions/composer@v5
-      - name: PHPunit test code coverage
-        run: vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml test/
+      - name: Setup PHP with PCOV
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: pcov
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
