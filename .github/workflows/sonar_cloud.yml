@@ -16,7 +16,7 @@ jobs:
       - name: Composer install
         uses: php-actions/composer@v5
       - name: PHPunit test code coverage
-        run: vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml
+        run: vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml tests/
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
