@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  php_serveramount:
+    build: ./php
+    container_name: php_serveramount
+    volumes:
+      - ../:/var/www
+    entrypoint:
+      - php-fpm
