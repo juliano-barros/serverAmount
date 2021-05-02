@@ -20,6 +20,8 @@ jobs:
         with:
           php-version: '8.0'
           coverage: pcov
+      - name: PHPunit test code coverage
+        run: vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml tests/
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
