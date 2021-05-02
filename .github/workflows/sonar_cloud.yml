@@ -21,10 +21,12 @@ jobs:
           php-version: '8.0'
           coverage: pcov
       - name: PHPunit test code coverage
-        run: 
-          ls -la && \
-          cat ./vendor/autoload.php && \
+        run: |
+          ls -la
+          cd vendor
+          ls-la
           ./vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml
+          
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
