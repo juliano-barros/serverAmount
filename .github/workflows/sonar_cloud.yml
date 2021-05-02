@@ -22,8 +22,9 @@ jobs:
           coverage: pcov
       - name: PHPunit test code coverage
         run: 
-          composer install && \
-          vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml
+          ls -la && \
+          cat ./vendor/autoload.php && \
+          ./vendor/bin/phpunit --coverage-clover=coverage-report.clover --log-junit=test-report.xml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
